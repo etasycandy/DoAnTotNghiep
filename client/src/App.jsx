@@ -27,6 +27,13 @@ import UserOrders from "./pages/UserOrders";
 import ErrorNotFound from "./pages/ErrorNotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminProducts from "./pages/admin/AdminProducts";
+import AdminCategories from "./pages/admin/AdminCategories";
+import AdminCustomers from "./pages/admin/AdminCustomers";
+import CreateProduct from "./pages/admin/CreateProduct";
+import CreateCategory from "./pages/admin/CreateCategory";
+import UpdateCategory from "./pages/admin/UpdateCategory";
+import AdminOrder from "./pages/admin/AdminOrder";
+import CreateCustomer from "./pages/admin/CreateCustomer";
 
 function Routers() {
   return (
@@ -63,6 +70,70 @@ function Routers() {
             element={
               <Private>
                 <AdminProducts />
+              </Private>
+            }
+          />
+          <Route
+            path="create-product"
+            element={
+              <Private>
+                <CreateProduct />
+              </Private>
+            }
+          />
+          <Route
+            path="categories"
+            element={
+              <Private>
+                <AdminCategories />
+              </Private>
+            }
+          />
+          <Route
+            path="create-category"
+            element={
+              <Private>
+                <CreateCategory />
+              </Private>
+            }
+          />
+          <Route
+            path="update-category/:id"
+            element={
+              <Private>
+                <UpdateCategory />
+              </Private>
+            }
+          />
+          <Route
+            path="categories/:page"
+            element={
+              <Private>
+                <AdminCategories />
+              </Private>
+            }
+          />
+          <Route
+            path="customers"
+            element={
+              <Private>
+                <AdminCustomers />
+              </Private>
+            }
+          />
+          <Route
+            path="create-customer"
+            element={
+              <Private>
+                <CreateCustomer />
+              </Private>
+            }
+          />
+          <Route
+            path="orders"
+            element={
+              <Private>
+                <AdminOrder />
               </Private>
             }
           />

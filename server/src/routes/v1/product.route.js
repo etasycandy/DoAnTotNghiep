@@ -35,13 +35,13 @@ const router = express.Router();
 router
   .route("")
   .get(productController.getProducts)
-  .post(upload.array("images"), productController.create)
-  // .post([Authorization.authorized], productController.create)
-  // .put([Authorization.authorized, productValidation], productController.update);
+  .post(upload.array("images"), productController.create);
+// .post([Authorization.authorized], productController.create)
+// .put([Authorization.authorized, productValidation], productController.update);
 
-// router
-//   .route("/page/:page")
-//   .get(Authorization.authorized, productController.paginate);
+router
+  .route("/page/:page")
+  .get(Authorization.authorized, productController.paginate);
 
 router.route("/cat-products/:name/:page?").get(homeController.catProducts);
 
@@ -53,6 +53,5 @@ router
   .delete(productController.deleteProduct)
   // .delete(Authorization.authorized, productController.deleteProduct);
   .patch(upload.array("images"), productController.update);
-
 
 module.exports = router;

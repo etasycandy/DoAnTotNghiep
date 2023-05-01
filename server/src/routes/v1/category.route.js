@@ -51,8 +51,9 @@ router
   .route("/:id")
   .get(categoryController.fetch)
   // .get(Authorization.authorized, categoryController.fetch)
-  .put(
-    [categoryValidation, Authorization.authorized],
+  .patch(
+    // [categoryValidation, Authorization.authorized],
+    upload.single("image"),
     categoryController.update,
   )
   .delete(categoryController.deleteCategory);

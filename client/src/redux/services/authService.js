@@ -25,6 +25,15 @@ const authService = createApi({
           };
         },
       }),
+      createCustomer: builder.mutation({
+        query: (data) => {
+          return {
+            url: "users",
+            method: "POST",
+            body: data,
+          };
+        },
+      }),
       userLogin: builder.mutation({
         query: (loginData) => {
           return {
@@ -34,12 +43,23 @@ const authService = createApi({
           };
         },
       }),
+      get: builder.query({
+        query: (page) => {
+          return {
+            url: `users/pages/${page}`,
+            method: "GET",
+          };
+        },
+        providesTags: ["users"],
+      }),
     };
   },
 });
 export const {
   useAuthLoginMutation,
   useUserRegisterMutation,
+  useCreateCustomerMutation,
   useUserLoginMutation,
+  useGetQuery,
 } = authService;
 export default authService;

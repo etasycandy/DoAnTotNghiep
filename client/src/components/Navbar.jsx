@@ -14,8 +14,14 @@ const Navbar = () => {
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
+  const navbarAdmin = window.location.href;
+
   return (
-    <div className="navbar flex justify-center items-center py-2 shadow bg-[#212121] text-white">
+    <div
+      className={`navbar flex justify-center items-center py-2 shadow bg-[#212121] text-white ${
+        navbarAdmin.includes("admin") && "hidden"
+      }`}
+    >
       <div className="container w-4/5 flex justify-between">
         {/* Logo */}
         <Link

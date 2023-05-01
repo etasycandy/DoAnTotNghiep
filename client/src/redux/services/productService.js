@@ -18,7 +18,7 @@ const productService = createApi({
       cProduct: builder.mutation({
         query: (data) => {
           return {
-            url: "/create-product",
+            url: "/products",
             method: "POST",
             body: data,
           };
@@ -47,7 +47,7 @@ const productService = createApi({
       getProducts: builder.query({
         query: (page) => {
           return {
-            url: `/products/${page}`,
+            url: `/products/page/${page}`,
             method: "GET",
           };
         },

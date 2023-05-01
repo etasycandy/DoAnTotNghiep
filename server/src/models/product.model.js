@@ -13,7 +13,7 @@ const productSchema = Schema(
     },
     discount: {
       type: Number,
-      required: true,
+      // required: true,
     },
     stock: {
       type: Number,

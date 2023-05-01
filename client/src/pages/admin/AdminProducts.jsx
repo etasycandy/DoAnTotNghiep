@@ -14,12 +14,11 @@ import Pagination from "../../components/Pagination";
 
 const AdminProducts = () => {
   let { page } = useParams();
-  console.log(page);
   if (!page) {
     page = 1;
   }
   const { data = [], isFetching } = useGetProductsQuery(page);
-  console.log(data);
+  // console.log(data);
   const { success } = useSelector((state) => state.globalReducer);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -42,8 +41,10 @@ const AdminProducts = () => {
   return (
     <Wrapper>
       <ScreenHeader>
-        <Link to="/dashboard/create-product" className="btn-dark">
-          create product
+        <Link to="/admin/create-product" className="btn-dark">
+          <button className="px-5 py-3 bg-[#242424] rounded-md hover:bg-green-700">
+            Create
+          </button>
         </Link>
         <Toaster position="top-right" />
       </ScreenHeader>
@@ -75,9 +76,9 @@ const AdminProducts = () => {
               </thead>
               <tbody>
                 {data?.products?.map((product) => (
-                  <tr className="odd:bg-gray-800" key={product._id}>
+                  <tr className="odd:bg-gray-800" key={product.id}>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
-                      {product.title}
+                      {product.name}
                     </td>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
                       ${product.price}.00
@@ -87,14 +88,16 @@ const AdminProducts = () => {
                     </td>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
                       <img
-                        src={`/images/${product.image1}`}
+                        src={`/${
+                          import.meta.env.VITE_PATH_IMAGE
+                        }/products/${product.images[0]}`}
                         alt="image name"
                         className="w-20 h-20 rounded-md object-cover"
                       />
                     </td>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
                       <Link
-                        to={`/dashboard/edit-product/${product._id}`}
+                        to={`/admin/edit-product/${product.id}`}
                         className="btn btn-warning"
                       >
                         edit
@@ -103,7 +106,7 @@ const AdminProducts = () => {
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
                       <span
                         className="btn btn-danger cursor-pointer"
-                        onClick={() => deleteProduct(product._id)}
+                        onClick={() => deleteProduct(product.id)}
                       >
                         delete
                       </span>
@@ -116,7 +119,7 @@ const AdminProducts = () => {
               page={parseInt(page)}
               perPage={data.perPage}
               count={data.count}
-              path="dashboard/products"
+              path="admin/products"
             />
           </div>
         ) : (

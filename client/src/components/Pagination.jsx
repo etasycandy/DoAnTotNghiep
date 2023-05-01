@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
 const Pagination = ({ page, count, perPage, path, theme }) => {
   const totalLinks = Math.ceil(count / perPage);
   let startLoop = page;
@@ -14,16 +16,16 @@ const Pagination = ({ page, count, perPage, path, theme }) => {
     const allLinks = [];
     for (let i = startLoop; i <= endLoop; i++) {
       allLinks.push(
-        <li key={i} className="pagination-li">
+        <li key={i} className="pagination-li mr-1">
           <Link
-            className={` ${
+            className={`px-2 py-1 rounded ${
               theme === "light" ? "pagination-link-light" : "pagination-link"
             }  ${page === i && "bg-indigo-500 text-white"}`}
             to={`/${path}/${i}`}
           >
             {i}
           </Link>
-        </li>
+        </li>,
       );
     }
     return allLinks;
@@ -38,7 +40,7 @@ const Pagination = ({ page, count, perPage, path, theme }) => {
             }`}
             to={`/${path}/${page + 1}`}
           >
-            <i class="bi bi-chevron-double-right"></i>
+            <IoIosArrowForward />
           </Link>
         </li>
       );
@@ -54,7 +56,7 @@ const Pagination = ({ page, count, perPage, path, theme }) => {
             }`}
             to={`/${path}/${page - 1}`}
           >
-            <i class="bi bi-chevron-double-left"></i>
+            <IoIosArrowBack />
           </Link>
         </li>
       );
@@ -62,7 +64,7 @@ const Pagination = ({ page, count, perPage, path, theme }) => {
   };
   return (
     count > perPage && (
-      <ul className="flex mt-2">
+      <ul className="flex mt-5 justify-center items-center">
         {prev()}
         {links()}
         {next()}

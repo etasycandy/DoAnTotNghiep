@@ -7,8 +7,14 @@ import { FaFacebookF } from "react-icons/fa";
 import { BsInstagram, BsYoutube, BsTwitter, BsLinkedin } from "react-icons/bs";
 
 const Footer = () => {
+  const checkUI = window.location.href;
+
   return (
-    <div className="w-full bg-[#242424] flex flex-col justify-center items-center text-center pt-16 pb-7">
+    <div
+      className={`w-full bg-[#242424] flex flex-col justify-center items-center text-center pt-16 pb-7 ${
+        checkUI.includes("admin") && "hidden"
+      }`}
+    >
       <div className="container flex flex-col justify-center items-center text-center text-white">
         <h3 className="text-center text-2xl mb-3">
           Join the Adventure newsletter to receive our best vacation deals

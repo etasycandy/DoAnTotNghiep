@@ -11,6 +11,7 @@ const create = async (req, res) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     const { files, body } = req;
+    console.log(files);
 
     const listImages = [];
 

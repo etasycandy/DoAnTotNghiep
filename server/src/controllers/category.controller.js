@@ -63,14 +63,27 @@ const fetch = async (req, res) => {
 };
 
 const update = async (req, res) => {
+  console.log("body: ", req.body);
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, description } = req.body;
+  const { file } = req;
   const errors = validationResult(req);
 
   if (errors.isEmpty()) {
-    const exist = await Category.findOne({ name });
-    if (!exist) {
-      await Category.updateOne({ _id: id }, { $set: { name } });
+    const category = await Category.findById(id);
+    const filePath = PATH_UPLOAD_FILE + "categories/";
+
+    if (category) {
+      if (file !== undefined) {
+        if (category.image != "categoryDefault.png") {
+          fs.unlinkSync(filePath + category.image);
+        }
+        req.body.image = file.filename;
+      }
+
+      Object.assign(category, req.body);
+      await category.save();
+
       return res
         .status(200)
         .json({ message: "Your category has updated successfully!" });
@@ -92,7 +105,9 @@ const deleteCategory = async (req, res) => {
     const category = await Category.findById(id);
 
     if (category) {
-      fs.unlinkSync(filePath + category.image);
+      if (category.image != "categoryDefault.png") {
+        fs.unlinkSync(filePath + category.image);
+      }
       await Category.findByIdAndDelete(id);
 
       return res
