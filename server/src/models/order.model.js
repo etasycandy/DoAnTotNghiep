@@ -3,37 +3,37 @@ const { toJSON } = require("./plugins");
 
 const orderSchema = Schema(
   {
-    productId: {
-      type: Types.ObjectId,
-      ref: "Product",
-    },
     userId: {
       type: Types.ObjectId,
       ref: "User",
     },
-    size: {
-      type: String,
-      required: true,
-    },
-    color: {
-      type: String,
-      required: true,
-    },
-    quantities: {
-      type: Number,
-      required: true,
-    },
+    cart: [
+      {
+        productId: {
+          type: Types.ObjectId,
+          ref: "Product",
+        },
+        size: {
+          type: String,
+          required: true,
+        },
+        color: {
+          type: String,
+          required: true,
+        },
+        quantities: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
     address: {
-      type: Map,
+      type: String,
       required: true,
     },
     status: {
-      type: Boolean,
-      default: false,
-    },
-    received: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: 1,
     },
     review: {
       type: Boolean,

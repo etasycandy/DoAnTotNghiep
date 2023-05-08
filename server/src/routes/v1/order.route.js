@@ -10,8 +10,8 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(Authorization.authorized, orderController.paginateOrders)
-  .put(Authorization.authorized, orderController.updateOrder);
+  .get(Authorization.authorized, orderController.paginate)
+  .post(Authorization.authorized, orderController.createOrder);
 
 router
   .route("/add-review")
@@ -20,6 +20,9 @@ router
     orderController.createRating,
   );
 
-router.route("/:id").get(Authorization.authorized, orderController.orderDetail);
+router
+  .route("/:id")
+  .get(Authorization.authorized, orderController.orderDetail)
+  .patch(Authorization.authorized, orderController.updateOrder);
 
 module.exports = router;

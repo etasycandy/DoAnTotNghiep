@@ -2,65 +2,107 @@
  * Module dependencies.
  */
 const { validationResult } = require("express-validator");
-const { Order, Product, Review } = require("../models");
+const { Order, Product, Review, User } = require("../models");
 
-const paginateOrders = async (req, res) => {
-  const query = req.query;
+const createOrder = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (errors.isEmpty()) {
+    const { body } = req;
+
+    const order = await Order.create(body);
+    return res.status(201).json({ msg: "Product has created", order });
+  } else {
+    return res.status(400).json({ errors: errors.array() });
+  }
+};
+
+const getOrderByUser = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (errors.isEmpty()) {
+    const order = await Order.find({ userId: req.query.userId });
+
+    return res.status(200).json({ order });
+  } else {
+    return res.status(400).json({ errors: errors.array() });
+  }
+};
+
+const paginate = async (req, res) => {
+  const { page, userId } = req.query;
   const perPage = 5;
-  const skip = (query.page - 1) * perPage;
-  const option = query.userId ? { userId: query.userId } : {};
+  const skip = (page - 1) * perPage;
 
   try {
-    const count = await Order.find(option).countDocuments();
-    const response = await Order.find(option)
-      .populate("productId", "-colors -sizes -createdAt -updatedAt -stock")
-      .populate("userId", "-password -updatedAt -createdAt -admin")
+    const count = await Order.find({ userId: userId }).countDocuments();
+    const response = await Order.find({ userId: userId })
       .skip(skip)
       .limit(perPage)
-      .sort({ createdAt: -1 });
-    // console.log(response);
+      .sort({ updatedAt: -1 });
     return res.status(200).json({ orders: response, perPage, count });
   } catch (error) {
     console.log(error.message);
+    return res.status(500).json("Server internal error!");
   }
 };
+
+// const paginateOrders = async (req, res) => {
+//   const query = req.query;
+//   const perPage = 5;
+//   const skip = (query.page - 1) * perPage;
+//   const option = query.userId ? { userId: query.userId } : {};
+
+//   try {
+//     const count = await Order.find(option).countDocuments();
+//     const response = await Order.find(option)
+//       .populate("productId", "-colors -sizes -createdAt -updatedAt -stock")
+//       .populate("userId", "-password -updatedAt -createdAt -admin")
+//       .skip(skip)
+//       .limit(perPage)
+//       .sort({ createdAt: -1 });
+//     // console.log(response);
+//     return res.status(200).json({ orders: response, perPage, count });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 const orderDetail = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const details = await Order.findOne({ _id: id })
-      .populate("productId", "-colors -sizes -createdAt -updatedAt -stock")
-      .populate("userId", "-password -updatedAt -createdAt -admin");
+    const details = await Order.findById(id);
     return res.status(200).json({ details });
   } catch (error) {
-    // console.log(error.message);
+    console.log(error.message);
     return res.status(500).json({ errors: error });
   }
 };
 
 const updateOrder = async (req, res) => {
-  const { id, status } = req.query;
-  let option = {};
+  const errors = validationResult(req);
+  if (errors.isEmpty()) {
+    const { id } = req.params;
+    const { body } = req;
 
-  if (status === "delivered") {
-    option = { status: true };
-  } else if (status === "received") {
-    option = { received: true };
-  }
+    try {
+      const order = await Order.findById(id);
 
-  try {
-    await Order.findByIdAndUpdate(id, option, {
-      new: true,
-    });
-    return res.status(200).json({
-      msg:
-        status === "delivered"
-          ? "Order has delivered"
-          : status === "received" && "Order received",
-    });
-  } catch (error) {
-    return res.status(500).json({ errors: error.message });
+      if (order) {
+        Object.assign(order, body);
+        await order.save();
+        return res.status(200).json({ msg: "Order has updated", order });
+      } else {
+        return res.status(404).json({ message: "Order not found" });
+      }
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).json({ errors: error });
+    }
+  } else {
+    console.log(errors.message);
+    return res.status(400).json({ errors: errors.array() });
   }
 };
 
@@ -93,8 +135,10 @@ const createRating = async (req, res) => {
 };
 
 module.exports = {
-  paginateOrders,
+  paginate,
   orderDetail,
   updateOrder,
   createRating,
+  createOrder,
+  getOrderByUser,
 };
