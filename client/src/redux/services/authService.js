@@ -52,6 +52,15 @@ const authService = createApi({
         },
         providesTags: ["users"],
       }),
+      deleteCustomer: builder.mutation({
+        query: (id) => {
+          return {
+            url: `users/delete/${id}`,
+            method: "DELETE",
+          };
+        },
+        invalidatesTags: ["users"],
+      }),
     };
   },
 });
@@ -61,5 +70,6 @@ export const {
   useCreateCustomerMutation,
   useUserLoginMutation,
   useGetQuery,
+  useDeleteCustomerMutation,
 } = authService;
 export default authService;

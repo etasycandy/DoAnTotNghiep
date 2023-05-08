@@ -18,15 +18,15 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-    },  
+    },
     fullname: {
       required: true,
       type: String,
     },
     avatar: {
-      required: true,
       type: String,
       default: "userDefault.png",
+      required: true,
     },
     admin: {
       required: true,

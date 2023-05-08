@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
   filename: function (req, file, cb) {
     const uniqueSuffix = Math.round(Math.random() * 1e9);
-
+    console.log(file);
     cb(
       null,
       file.fieldname +
@@ -32,7 +32,11 @@ const router = express.Router();
 
 router
   .route("")
-  .post(upload.single("avatar"), userController.createUser)
+  .post(
+    userValidation.createValidations,
+    upload.single("avatar"),
+    userController.createUser,
+  )
   .get(userController.getUsers);
 
 router

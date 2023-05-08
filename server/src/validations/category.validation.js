@@ -6,5 +6,5 @@ module.exports = [
     .isEmpty()
     .trim()
     .escape()
-    .withMessage("Category is required"),
+    .withMessage("Category's Name is required"),
 ];

@@ -70,8 +70,10 @@ const RegisterForm = () => {
           type="text"
           name="fullname"
           id="fullname"
-          className={`w-full bg-transparent outline-none border-none leading-4 font-semibold text-lg text-[#333] placeholder:text-#aaa placeholder:font-medium form-input ${
-            showError(errors, "fullname") ? "border-rose-600" : ""
+          className={`w-full bg-transparent outline-none leading-4 font-semibold text-lg text-[#333] placeholder:font-medium form-input ${
+            showError(errors, "fullname")
+              ? "placeholder:text-red-600"
+              : "placeholder:text-#aaa"
           }`}
           placeholder="Fullname"
           value={state.fullname}
@@ -95,8 +97,10 @@ const RegisterForm = () => {
           type="text"
           name="username"
           id="username"
-          className={`w-full bg-transparent outline-none border-none leading-4 font-semibold text-lg text-[#333] placeholder:text-#aaa placeholder:font-medium form-input${
-            showError(errors, "username") ? "border-rose-600 " : ""
+          className={`w-full bg-transparent outline-none leading-4 font-semibold text-lg text-[#333] placeholder:font-medium form-input ${
+            showError(errors, "username")
+              ? "placeholder:text-red-600"
+              : "placeholder:text-#aaa"
           }`}
           placeholder="Username"
           value={state.username}
@@ -120,8 +124,10 @@ const RegisterForm = () => {
           type="email"
           name="email"
           id="email"
-          className={`w-full bg-transparent outline-none border-none leading-4 font-semibold text-lg text-[#333] placeholder:text-#aaa placeholder:font-medium form-input ${
-            showError(errors, "email") ? "border-rose-600 " : ""
+          className={`w-full bg-transparent outline-none leading-4 font-semibold text-lg text-[#333] placeholder:font-medium form-input ${
+            showError(errors, "email")
+              ? "placeholder:text-red-600"
+              : "placeholder:text-#aaa"
           }`}
           placeholder="Email"
           value={state.email}
@@ -145,8 +151,10 @@ const RegisterForm = () => {
           type="password"
           name="password"
           id="password"
-          className={`w-full bg-transparent outline-none border-none leading-4 font-semibold text-lg text-[#333] placeholder:text-#aaa placeholder:font-medium form-input ${
-            showError(errors, "password") ? "border-rose-600" : ""
+          className={`w-full bg-transparent outline-none leading-4 font-semibold text-lg text-[#333] placeholder:font-medium form-input ${
+            showError(errors, "password")
+              ? "placeholder:text-red-600"
+              : "placeholder:text-#aaa"
           }`}
           placeholder="Password..."
           value={state.password}

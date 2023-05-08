@@ -67,7 +67,7 @@ const CreateCategory = () => {
       <form className="w-full md:w-full" onSubmit={submitCategory}>
         {errors.length > 0 &&
           errors.map((error, key) => (
-            <p className="alert-danger" key={key}>
+            <p className="alert-danger mx-3" key={key}>
               {error.msg}
             </p>
           ))}
@@ -102,14 +102,6 @@ const CreateCategory = () => {
             onChange={setValue}
             placeholder="Description..."
           />
-          {/* <textarea
-            rows={3}
-            type="text"
-            name="description"
-            onChange={onChange}
-            placeholder="Description..."
-            className="text-sm rounded border focus:border-green-700 focus:border-2 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white outline-none"
-          /> */}
         </div>
         <div className="w-full p-3">
           <label
@@ -120,7 +112,7 @@ const CreateCategory = () => {
           </label>
           <div className="flex items-center justify-center w-full">
             <label
-              for="dropzone-file"
+              htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -133,9 +125,9 @@ const CreateCategory = () => {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                   ></path>
                 </svg>
@@ -156,10 +148,6 @@ const CreateCategory = () => {
               />
             </label>
           </div>
-          <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-            <span className="font-medium">Oh, Category!</span> Cannot be left
-            blank.
-          </p>
         </div>
         <div className="mb-3">
           <ImagesPreview url={preview.image} heading="Image" />

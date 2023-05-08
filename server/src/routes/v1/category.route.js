@@ -35,7 +35,7 @@ const router = express.Router();
 router
   .route("/")
   .post(
-    // [categoryValidation, Authorization.authorized],
+    [categoryValidation, Authorization.authorized],
     upload.single("image"),
     categoryController.create,
   )
@@ -49,14 +49,12 @@ router
 
 router
   .route("/:id")
-  .get(categoryController.fetch)
-  // .get(Authorization.authorized, categoryController.fetch)
+  .get(Authorization.authorized, categoryController.fetch)
   .patch(
-    // [categoryValidation, Authorization.authorized],
+    [categoryValidation, Authorization.authorized],
     upload.single("image"),
     categoryController.update,
   )
-  .delete(categoryController.deleteCategory);
-  // .delete(Authorization.authorized, categoryController.deleteCategory);
+  .delete(Authorization.authorized, categoryController.deleteCategory);
 
 module.exports = router;

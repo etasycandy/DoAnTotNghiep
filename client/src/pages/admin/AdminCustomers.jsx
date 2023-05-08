@@ -5,7 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import ScreenHeader from "../../components/ScreenHeader";
 import Wrapper from "./Wrapper";
 import { clearMessage, setSuccess } from "../../redux/reducers/globalReducer";
-import { useGetQuery } from "../../redux/services/authService";
+import {
+  useGetQuery,
+  useDeleteCustomerMutation,
+} from "../../redux/services/authService";
 import Spinner from "../../components/Spinner";
 import Pagination from "../../components/Pagination";
 
@@ -17,22 +20,22 @@ const AdminCustomers = () => {
   const { success } = useSelector((state) => state.globalReducer);
   const dispatch = useDispatch();
   const { data = [], isFetching } = useGetQuery(page);
-  // const [removeCategory, response] = useDeleteCategoryMutation();
-  // const deleteCat = (id) => {
-  //   if (window.confirm("Are you really want to delete the category?")) {
-  //     removeCategory(id);
-  //   }
-  // };
-  //   useEffect(() => {
-  //     if (response.isSuccess) {
-  //       dispatch(setSuccess(response?.data?.message));
-  //     }
-  //   }, [response?.data?.message]);
-  //   useEffect(() => {
-  //     return () => {
-  //       dispatch(clearMessage());
-  //     };
-  //   }, []);
+  const [removeCategory, response] = useDeleteCustomerMutation();
+  const deleteCustomer = (id) => {
+    if (window.confirm("Are you really want to delete the customer?")) {
+      removeCategory(id);
+    }
+  };
+  useEffect(() => {
+    if (response.isSuccess) {
+      dispatch(setSuccess(response?.data?.message));
+    }
+  }, [response?.data?.message]);
+  useEffect(() => {
+    return () => {
+      dispatch(clearMessage());
+    };
+  }, []);
 
   return (
     <Wrapper>
@@ -109,7 +112,7 @@ const AdminCustomers = () => {
                       <td className="p-3 capitalize text-sm font-normal text-gray-400">
                         <button
                           className="btn btn-danger capitalize"
-                          //   onClick={() => deleteCat(user.id)}
+                          onClick={() => deleteCustomer(user.id)}
                         >
                           delete
                         </button>

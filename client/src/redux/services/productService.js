@@ -38,7 +38,7 @@ const productService = createApi({
       deleteProduct: builder.mutation({
         query: (id) => {
           return {
-            url: `/delete/${id}`,
+            url: `products/${id}`,
             method: "DELETE",
           };
         },

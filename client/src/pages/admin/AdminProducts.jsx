@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
-import { clearMessage } from "../../redux/reducers/globalReducer";
+import { clearMessage, setSuccess } from "../../redux/reducers/globalReducer";
 import Wrapper from "./Wrapper";
 import {
   useGetProductsQuery,
@@ -21,6 +21,18 @@ const AdminProducts = () => {
   // console.log(data);
   const { success } = useSelector((state) => state.globalReducer);
   const dispatch = useDispatch();
+  const [delProduct, response] = useDeleteProductMutation();
+
+  const deleteProduct = (id) => {
+    if (window.confirm("Are you really want to delete this product?")) {
+      delProduct(id);
+    }
+  };
+  useEffect(() => {
+    if (response.isSuccess) {
+      dispatch(setSuccess(response?.data?.message));
+    }
+  }, [response?.data?.message]);
   useEffect(() => {
     if (success) {
       toast.success(success);
@@ -29,14 +41,6 @@ const AdminProducts = () => {
       dispatch(clearMessage());
     };
   }, []);
-  const [delProduct, response] = useDeleteProductMutation();
-
-  const deleteProduct = (id) => {
-    if (window.confirm("Are you really want to delete this product?")) {
-      delProduct(id);
-    }
-  };
-
 
   return (
     <Wrapper>
@@ -48,6 +52,7 @@ const AdminProducts = () => {
         </Link>
         <Toaster position="top-right" />
       </ScreenHeader>
+      {success && <div className="alert-success">{success}</div>}
       {!isFetching ? (
         data?.products?.length > 0 ? (
           <div>
@@ -88,9 +93,9 @@ const AdminProducts = () => {
                     </td>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
                       <img
-                        src={`/${
-                          import.meta.env.VITE_PATH_IMAGE
-                        }/products/${product.images[0]}`}
+                        src={`/${import.meta.env.VITE_PATH_IMAGE}/products/${
+                          product.images[0]
+                        }`}
                         alt="image name"
                         className="w-20 h-20 rounded-md object-cover"
                       />
