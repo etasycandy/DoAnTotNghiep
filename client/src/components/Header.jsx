@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import categoryCover from "../assets/img/categories/categoryDefault.jpg";
 
 const Header = (props, { children }) => {
   return (
@@ -13,7 +14,11 @@ const Header = (props, { children }) => {
             {props.name}
           </h1>
         </div>
-        <img className="w-full" src={props.imageCat} alt="imageCategory" />
+        {props.imageCat ? (
+          <img className="w-full" src={props.imageCat} alt="imageCategory" />
+        ) : (
+          <img className="w-full" src={categoryCover} alt="imageCategory" />
+        )}
       </div>
     </motion.header>
   );

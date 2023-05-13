@@ -1,6 +1,7 @@
 const { Product, Category } = require("../models");
 
 const catProducts = async (req, res) => {
+  console.log(req.params);
   const { name, page, keyword } = req.params;
   const perPage = 12;
   const skip = (page - 1) * perPage;
@@ -28,12 +29,21 @@ const catProducts = async (req, res) => {
         .populate("category")
         // .populate("reviews")
         .sort({ updatedAt: -1 });
-      return res.status(200).json({
-        products: response,
-        perPage,
-        count,
-        imageCategory: category.image,
-      });
+
+      if (category) {
+        return res.status(200).json({
+          products: response,
+          perPage,
+          count,
+          imageCategory: category.image,
+        });
+      } else {
+        return res.status(200).json({
+          products: response,
+          perPage,
+          count,
+        });
+      }
     } catch (error) {
       console.log(error.message);
     }

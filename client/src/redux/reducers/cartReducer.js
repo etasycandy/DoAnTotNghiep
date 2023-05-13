@@ -32,17 +32,21 @@ const cartReducer = createSlice({
     },
     incQuantity: (state, { payload }) => {
       const product = state.cart[payload];
-      product.quantity += 1;
-      state.items += 1;
-      state.total += discount(product.price, product.discount);
-      localStorage.setItem("cart", JSON.stringify(state.cart));
+      if (product) {
+        product.quantity += 1;
+        state.items += 1;
+        state.total += discount(product.price, product.discount);
+        localStorage.setItem("cart", JSON.stringify(state.cart));
+      }
     },
     decQuantity: (state, { payload }) => {
       const product = state.cart[payload];
-      product.quantity -= 1;
-      state.items -= 1;
-      state.total -= discount(product.price, product.discount);
-      localStorage.setItem("cart", JSON.stringify(state.cart));
+      if (product && product.quantity > 1) {
+        product.quantity -= 1;
+        state.items -= 1;
+        state.total -= discount(product.price, product.discount);
+        localStorage.setItem("cart", JSON.stringify(state.cart));
+      }
     },
     removeItem: (state, { payload }) => {
       const find = state.cart.find((item) => item.id === payload);

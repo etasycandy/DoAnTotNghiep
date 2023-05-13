@@ -18,7 +18,7 @@ const homeProducts = createApi({
       searchProducts: builder.query({
         query: (params) => {
           return {
-            url: `products/search-products/${params.keyword}/${params.page}`,
+            url: `products/search/${params.keyword}/${params.page}`,
             method: "GET",
           };
         },

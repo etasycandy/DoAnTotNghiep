@@ -2,10 +2,13 @@ import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/img/logo.png";
 
-import { FaRegUserCircle, FaBars, FaTimes } from "react-icons/fa";
+import { FaRegUserCircle, FaBars, FaTimes, FaSearch } from "react-icons/fa";
 import { TiShoppingCart } from "react-icons/ti";
 import { FiLogIn } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { toggleSearchBar } from "../redux/reducers/globalReducer";
+import Search from "./Search";
 
 const Navbar = () => {
   const { userToken, user } = useSelector((state) => state.authReducer);
@@ -15,6 +18,7 @@ const Navbar = () => {
   const closeMobileMenu = () => setClick(false);
 
   const navbarAdmin = window.location.href;
+  const dispatch = useDispatch();
 
   return (
     <div
@@ -60,6 +64,14 @@ const Navbar = () => {
                 Product
               </li>
             </Link>
+            {/* <Link to="search" onClick={closeMobileMenu}> */}
+            <li
+              onClick={closeMobileMenu}
+              className="nav-item cursor-pointer py-1.5 pl-2 duration-100 hover:text-green-200 active:text-gray-200"
+            >
+              <FaSearch size={20} onClick={() => dispatch(toggleSearchBar())} />
+            </li>
+            {/* </Link> */}
             {/* <Link to="contact" onClick={closeMobileMenu}>
               <li className="nav-item cursor-pointer py-1.5 pl-2 duration-100 hover:text-green-200 active:text-gray-200">
                 Contact
@@ -100,6 +112,7 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
+      <Search />
     </div>
   );
 };

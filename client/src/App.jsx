@@ -34,6 +34,7 @@ import CreateCategory from "./pages/admin/CreateCategory";
 import UpdateCategory from "./pages/admin/UpdateCategory";
 import AdminOrder from "./pages/admin/AdminOrder";
 import CreateCustomer from "./pages/admin/CreateCustomer";
+import SearchProducts from "./pages/SearchProducts";
 
 function Routers() {
   return (
@@ -43,6 +44,10 @@ function Routers() {
         <Route path="/" element={<Home />} />
         <Route path="products/:name" element={<CatProducts />} />
         <Route path="products/:name/:page" element={<CatProducts />} />
+        <Route
+          path="search-products/:keyword/:page"
+          element={<SearchProducts />}
+        />
         <Route path="cart" element={<Cart />} />
         <Route element={<UserAuthRoute />}>
           <Route path="login" element={<LoginForm />} />
