@@ -11,6 +11,7 @@ import { BsArrowLeftShort } from "react-icons/bs";
 import ImagesPreview from "../../components/ImagesPreview";
 
 const CreateCategory = () => {
+  // const [errors, setErrors] = useState([]);
   const [value, setValue] = useState("");
   const [state, setState] = useState({
     name: "",

@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 const { validationResult } = require("express-validator");
-const { Order, Product, Review, User } = require("../models");
+const { Order, Product, Review } = require("../models");
 
 const createOrder = async (req, res) => {
   const errors = validationResult(req);
@@ -21,9 +21,16 @@ const getOrderByUser = async (req, res) => {
   const errors = validationResult(req);
 
   if (errors.isEmpty()) {
-    const order = await Order.find({ userId: req.query.userId });
+    const order = await Order.find({ userId: req.params.id });
 
-    return res.status(200).json({ order });
+    if (order.length === 0) {
+      return res.status(200).json({ order });
+    } else {
+      const result = order.filter(
+        (item) => item.cart.length !== 0 && item.status !== "DELIVERED",
+      );
+      return res.status(200).json({ order: result });
+    }
   } else {
     return res.status(400).json({ errors: errors.array() });
   }
@@ -81,18 +88,43 @@ const orderDetail = async (req, res) => {
 };
 
 const updateOrder = async (req, res) => {
+  console.log("--------------------", req);
+  // const errors = validationResult(req);
+  // if (errors.isEmpty()) {
+  // const { id } = req.params;
+  // const { body } = req;
+
+  // try {
+  //   const order = await Order.findById(id);
+
+  //   if (order) {
+  //     Object.assign(order, body);
+  //     await order.save();
+  //     return res.status(200).json({ msg: "Order has updated", order });
+  //   } else {
+  //     return res.status(404).json({ message: "Order not found" });
+  //   }
+  // } catch (error) {
+  //   console.log(error.message);
+  //   return res.status(500).json({ errors: error });
+  // }
+  // } else {
+  //   console.log(errors.message);
+  //   return res.status(400).json({ errors: errors.array() });
+  // }
+};
+
+const deleteOrder = async (req, res) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     const { id } = req.params;
-    const { body } = req;
 
     try {
       const order = await Order.findById(id);
 
       if (order) {
-        Object.assign(order, body);
-        await order.save();
-        return res.status(200).json({ msg: "Order has updated", order });
+        await order.remove();
+        return res.status(200).json({ msg: "Order has deleted" });
       } else {
         return res.status(404).json({ message: "Order not found" });
       }
@@ -138,6 +170,7 @@ module.exports = {
   paginate,
   orderDetail,
   updateOrder,
+  deleteOrder,
   createRating,
   createOrder,
   getOrderByUser,

@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./reducers/authReducer";
 import globalReducer from "./reducers/globalReducer";
 import cartReducer from "./reducers/cartReducer";
+import orderReducer from "./reducers/orderReducer";
 
 import categoryService from "./services/categoryService";
 import authService from "./services/authService";
@@ -22,6 +23,7 @@ const Store = configureStore({
     authReducer: authReducer,
     globalReducer: globalReducer,
     cartReducer,
+    orderReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([

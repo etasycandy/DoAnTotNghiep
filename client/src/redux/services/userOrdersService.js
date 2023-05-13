@@ -14,6 +14,24 @@ const userOrdersService = createApi({
   }),
   endpoints: (builder) => {
     return {
+      createOrder: builder.mutation({
+        query: (body) => {
+          return {
+            url: "/orders",
+            method: "POST",
+            body,
+          };
+        },
+      }),
+      updateOrder: builder.mutation({
+        query: (data) => {
+          return {
+            url: `/orders/${data.id}`,
+            method: "PUT",
+            body: data.body,
+          };
+        },
+      }),
       getOrders: builder.query({
         query: (data) => {
           return {
@@ -22,6 +40,22 @@ const userOrdersService = createApi({
           };
         },
         providesTags: ["orders"],
+      }),
+      getOrderByIdUser: builder.query({
+        query: (data) => {
+          return {
+            url: `/orders/user/${data}`,
+            method: "GET",
+          };
+        },
+      }),
+      deleteOrder: builder.mutation({
+        query: (id) => {
+          return {
+            url: `/orders/${id}`,
+            method: "DELETE",
+          };
+        },
       }),
       details: builder.query({
         query: (id) => {
@@ -55,8 +89,12 @@ const userOrdersService = createApi({
   },
 });
 export const {
+  useCreateOrderMutation,
+  useUpdateOrderMutation,
   useGetOrdersQuery,
+  useGetOrderByIdUserQuery,
   useDetailsQuery,
+  useDeleteOrderMutation,
   useReceivedOrderMutation,
   usePostReviewMutation,
 } = userOrdersService;

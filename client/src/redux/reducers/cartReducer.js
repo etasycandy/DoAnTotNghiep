@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { discount } from "../../utils/discount";
 const cartData = localStorage.getItem("cart");
 const cartArray = cartData ? JSON.parse(cartData) : [];
+
 function allItems(data) {
   let items = 0;
   for (let i = 0; i < data.length; i++) {
@@ -32,21 +33,20 @@ const cartReducer = createSlice({
     },
     incQuantity: (state, { payload }) => {
       const product = state.cart[payload];
-      if (product) {
-        product.quantity += 1;
-        state.items += 1;
-        state.total += discount(product.price, product.discount);
-        localStorage.setItem("cart", JSON.stringify(state.cart));
-      }
+      product.quantity += 1;
+      state.items += 1;
+      state.total += discount(product.price, product.discount);
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     decQuantity: (state, { payload }) => {
       const product = state.cart[payload];
-      if (product && product.quantity > 1) {
-        product.quantity -= 1;
-        state.items -= 1;
-        state.total -= discount(product.price, product.discount);
-        localStorage.setItem("cart", JSON.stringify(state.cart));
+      const quan = (product.quantity -= 1);
+      if (quan === 0) {
+        state.cart.splice(payload, 1);
       }
+      state.items -= 1;
+      state.total -= discount(product.price, product.discount);
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     removeItem: (state, { payload }) => {
       const find = state.cart.find((item) => item.id === payload);
@@ -63,8 +63,22 @@ const cartReducer = createSlice({
       state.items = 0;
       state.total = 0;
     },
+    setCart: (state, { payload }) => {
+      localStorage.setItem("cart", JSON.stringify(payload));
+      state.cart = payload;
+    },
+    setTotal: (state, { payload }) => {
+      state.total = payload;
+    },
   },
 });
-export const { addCart, incQuantity, decQuantity, removeItem, emptyCart } =
-  cartReducer.actions;
+export const {
+  addCart,
+  incQuantity,
+  decQuantity,
+  removeItem,
+  emptyCart,
+  setCart,
+  setTotal,
+} = cartReducer.actions;
 export default cartReducer.reducer;
