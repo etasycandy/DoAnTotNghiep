@@ -1,7 +1,6 @@
 const { Product, Category } = require("../models");
 
 const catProducts = async (req, res) => {
-  console.log(req.params);
   const { name, page, keyword } = req.params;
   const perPage = 12;
   const skip = (page - 1) * perPage;

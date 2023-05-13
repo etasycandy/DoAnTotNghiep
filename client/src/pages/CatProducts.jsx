@@ -55,7 +55,7 @@ const CatProducts = () => {
             />
           </>
         ) : (
-          <p className="text-base font-medium mt-5 mb-7 text-red-500">
+          <p className="alert-danger mt-5">
             No products found in #{name} category
           </p>
         )}

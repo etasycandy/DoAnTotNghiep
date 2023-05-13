@@ -31,7 +31,7 @@ const Search = () => {
         onClick={closeSearch}
       >
         <div className="flex -mx-8 justify-center">
-          <div className="w-full sm:w-10/12 md:w-8/12 lg:w-6/12 px-8 mt-10 relative">
+          <form onSubmit={searchProducts} className="w-full sm:w-10/12 md:w-8/12 lg:w-6/12 px-8 mt-10 relative">
             <input
               type="text"
               name=""
@@ -45,7 +45,7 @@ const Search = () => {
               className="absolute top-[13px] right-12 text-2xl text-gray-500 cursor-pointer hover:text-green-700"
               onClick={searchProducts}
             />
-          </div>
+          </form>
         </div>
       </motion.div>
     )
