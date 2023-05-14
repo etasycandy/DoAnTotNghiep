@@ -5,36 +5,40 @@ import currency from "currency-formatter";
 import { BsTrash } from "react-icons/bs";
 import { ImCross } from "react-icons/im";
 import { motion } from "framer-motion";
+import Swal from "sweetalert2";
 import { discount } from "../utils/discount";
 import useToastify from "../hooks/useToatify";
 import Quantity from "../components/Quantity";
-import { setCart, setTotal } from "../redux/reducers/cartReducer";
 import {
   incQuantity,
   decQuantity,
   removeItem,
+  setCart,
+  setTotal,
 } from "../redux/reducers/cartReducer";
 import { useSendPaymentMutation } from "../redux/services/paymentService";
-import {
-  useUpdateOrderMutation,
-  useGetOrderByIdUserQuery,
-  useDeleteOrderMutation,
-  useCreateOrderMutation,
-} from "../redux/services/userOrdersService";
+import { useCreateOrderMutation } from "../redux/services/userOrdersService";
 import Modal from "../components/Modal";
 import { setInfoUser } from "../redux/reducers/orderReducer";
+import {
+  useCreateCartMutation,
+  useUpdateCartMutation,
+  useDeleteCartMutation,
+  useGetCartByIdUserQuery,
+} from "../redux/services/cartService";
 
 const Cart = () => {
   const [openModal, setOpenModal] = useState(false);
   const { cart, total } = useSelector((state) => state.cartReducer);
-  const { statusOrder, infoUser } = useSelector((state) => state.orderReducer);
+  const { infoUser } = useSelector((state) => state.orderReducer);
   const { userToken, user } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
   const toast = useToastify();
-  const [updateOrder] = useUpdateOrderMutation();
-  const [deleteOrder] = useDeleteOrderMutation();
-  const [createOrder, res] = useCreateOrderMutation();
-  const { data } = useGetOrderByIdUserQuery(user?.id);
+  const [updateCart] = useUpdateCartMutation();
+  const [deleteCart] = useDeleteCartMutation();
+  const [createCart, res] = useCreateCartMutation();
+  const [createOrder, resp] = useCreateOrderMutation();
+  const { data } = useGetCartByIdUserQuery(user?.id);
   const navigate = useNavigate();
   const [doPayment, response] = useSendPaymentMutation();
   const inc = (i) => {
@@ -44,10 +48,20 @@ const Cart = () => {
     dispatch(decQuantity(i));
   };
   const remove = (id) => {
-    // verify user that you are really want to delete the project or item
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      dispatch(removeItem(id));
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to delete this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        dispatch(removeItem(id));
+      }
+    });
   };
   const pay = () => {
     if (userToken) {
@@ -56,7 +70,7 @@ const Cart = () => {
       dispatch(setCart([]));
       localStorage.removeItem("cart");
       dispatch(setInfoUser({ name: "", address: "", phone: "" }));
-      localStorage.removeItem("orderId");
+      localStorage.removeItem("cartId");
       setOpenModal(false);
     } else {
       navigate("/login");
@@ -65,38 +79,12 @@ const Cart = () => {
   useEffect(() => {
     if (user && data) {
       const cartLocal = JSON.parse(localStorage.getItem("cart"));
-      if (!data.order.length) return [];
-      let arr = data.order[0].cart;
-      if (!cartLocal) {
-        for (let i = 1; i < data?.order.length; i++) {
-          for (let j = 0; j < data?.order[i].cart.length; j++) {
-            const product = data?.order[i]?.cart[j];
-            const index = arr.findIndex(
-              (item) =>
-                item.name === product?.name &&
-                item.color === product?.color &&
-                item.size === product?.size,
-            );
-            if (index === -1) {
-              arr = [...arr, product];
-            }
-          }
-        }
-      } else {
-        for (let i = 1; i < data?.order.length; i++) {
-          for (let j = 0; j < data?.order[i].cart.length; j++) {
-            const product = data?.order[i]?.cart[j];
-            const index = arr.findIndex(
-              (item) =>
-                item.name === product?.name &&
-                item.color === product?.color &&
-                item.size === product?.size,
-            );
-            if (index === -1) {
-              arr = [...arr, product];
-            }
-          }
-        }
+      if (!data.cart.length) {
+        dispatch(setCart([]));
+        dispatch(setTotal(0));
+      }
+      let arr = data?.cart[0]?.cart ? data?.cart[0]?.cart : [];
+      if (cartLocal) {
         for (const cart of cartLocal) {
           const index = arr.findIndex(
             (item) =>
@@ -111,33 +99,31 @@ const Cart = () => {
       }
       let total = 0;
       for (let a of arr) {
-        a = { ...a, quantity: 1 };
-        total += discount(a.price, a.discount);
+        total += discount(a.price * a.quantity, a.discount);
       }
       dispatch(setCart(arr));
       dispatch(setTotal(total));
     }
-  }, [data, user]);
+  }, [data]);
 
   useEffect(() => {
-    const id = localStorage.getItem("orderId");
-    if (id) {
-      if (cart.length) {
-        updateOrder({
+    const id = localStorage.getItem("cartId");
+    if (id !== "undefined") {
+      if (cart.length !== 0) {
+        updateCart({
           id: id,
           body: {
             cart: cart,
           },
         });
       } else {
-        deleteOrder(id);
-        localStorage.removeItem("orderId");
+        deleteCart(id);
+        localStorage.removeItem("cartId");
       }
     } else {
       if (cart.length !== 0) {
-        createOrder({
+        createCart({
           userId: user?.id,
-          status: statusOrder,
           cart: cart,
         });
       }
@@ -146,7 +132,7 @@ const Cart = () => {
 
   useEffect(() => {
     if (res?.isSuccess) {
-      localStorage.setItem("orderId", res?.data?.order.id);
+      localStorage.setItem("cartId", res?.data?.cart?.id);
     }
   }, [res?.isSuccess]);
 
@@ -155,11 +141,25 @@ const Cart = () => {
       window.location.href = response?.data?.url;
       dispatch(setCart([]));
       dispatch(setInfoUser({ name: "", address: "", phone: "" }));
-      localStorage.removeItem("orderId");
+      localStorage.removeItem("cartId");
       setOpenModal(false);
       toast.handleOpenToastify("success", "Purchase successfully!", 1000);
     }
   }, [response]);
+
+  useEffect(() => {
+    if (resp?.isSuccess) {
+      const id = localStorage.getItem("cartId");
+      if (id) {
+        updateCart({
+          id: id,
+          body: {
+            cart: [],
+          },
+        });
+      }
+    }
+  }, [resp?.isSuccess]);
 
   return (
     <div className="relative z-50">
@@ -304,21 +304,14 @@ const Cart = () => {
                   if (!infoUser.phone || !infoUser.address || !infoUser.name) {
                     return;
                   } else {
-                    const id = localStorage.getItem("orderId");
-                    if (id) {
-                      await updateOrder({
-                        id: id,
-                        body: {
-                          fullname: infoUser.name,
-                          address: infoUser.address,
-                          phone: infoUser.phone,
-                          status: "DELIVERED",
-                        },
-                      });
-                      pay();
-                    } else {
-                      return;
-                    }
+                    await createOrder({
+                      userId: user?.id,
+                      fullname: infoUser.name,
+                      address: infoUser.address,
+                      phone: infoUser.phone,
+                      order: cart,
+                    });
+                    pay();
                   }
                 }}
                 className="py-2 px-3 bg-green-700 text-sm font-medium text-white rounded hover:bg-green-600"

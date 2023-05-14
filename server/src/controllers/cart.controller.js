@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 const { validationResult } = require("express-validator");
-const { Product, Cart } = require("../models");
+const { Cart } = require("../models");
 
 const createCart = async (req, res) => {
   const errors = validationResult(req);
@@ -21,8 +21,16 @@ const getCartByUser = async (req, res) => {
   const errors = validationResult(req);
 
   if (errors.isEmpty()) {
-    const cart = await Cart.find({ userId: req.params.id });
-    return res.status(200).json({ cart });
+    const result = await Cart.find({ userId: req.params.id });
+    if (result.length === 0 || result.length === 1) {
+      return res.status(200).json({ cart: result });
+    } else {
+      const cart = result.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+      return res.status(200).json({ cart: [cart[0]] });
+    }
   } else {
     return res.status(400).json({ errors: errors.array() });
   }

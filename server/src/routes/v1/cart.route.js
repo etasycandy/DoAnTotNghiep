@@ -11,7 +11,7 @@ router.route("/").post(Authorization.authorized, cartController.createCart);
 
 router
   .route("/:id")
-  .patch(Authorization.authorized, cartController.updateCart)
+  .put(Authorization.authorized, cartController.updateCart)
   .delete(Authorization.authorized, cartController.deleteCart);
 
 router

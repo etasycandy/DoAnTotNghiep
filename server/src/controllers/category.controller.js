@@ -63,7 +63,7 @@ const fetch = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  console.log("body: ", req.body);
+  // console.log("body: ", req.body);
   const { id } = req.params;
   const { name, description } = req.body;
   const { file } = req;
